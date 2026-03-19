@@ -19,6 +19,8 @@ RUN git clone --depth=1 https://github.com/kijai/ComfyUI-WanVideoWrapper && \
     git clone --depth=1 https://github.com/plugcrypt/CRT-Nodes && \
     git clone --depth=1 https://github.com/evanspearman/ComfyMath && \
     git clone --depth=1 https://github.com/teskor-hub/comfyui-teskors-utils && \
+    git clone --depth=1 https://github.com/jnxmx/ComfyUI_HuggingFace_Downloader && \
+    git clone --depth=1 https://github.com/reasj2/comfyui-animator-nodes && \
     for req in /comfyui/custom_nodes/*/requirements.txt; do \
         pip install --no-cache-dir -r "$req" 2>/dev/null || true; \
     done && \
