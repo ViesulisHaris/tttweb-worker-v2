@@ -1,4 +1,4 @@
-name: Build and Push Base Docker Image
+name: Build and Push Docker Images
 
 # Manual trigger only — base image rarely changes (only when models are added/updated)
 on:
@@ -6,7 +6,8 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/tttweb-base
+  BASE_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/tttweb-base
+  FULL_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/tttweb-worker-v2
 
 jobs:
   build-base:
@@ -55,6 +56,17 @@ jobs:
           file: Dockerfile.base
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.BASE_IMAGE }}:latest
+            ${{ env.BASE_IMAGE }}:${{ github.sha }}
+          no-cache: true
+
+      - name: Build and push full image (base + custom nodes)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.FULL_IMAGE }}:latest
+            ${{ env.FULL_IMAGE }}:${{ github.sha }}
           no-cache: true
