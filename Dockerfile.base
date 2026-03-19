@@ -63,10 +63,8 @@ RUN mkdir -p /comfyui/models/loras && \
 
 # Uni3C controlnet for animation stability (~2GB)
 RUN mkdir -p /comfyui/models/controlnet && \
-    wget --tries=5 --retry-connrefused --waitretry=10 -c -q --show-progress "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/controlnet/wan21_u3c_controlnet_fp16.safetensors" \
-    -O /comfyui/models/controlnet/wan21_u3c_controlnet_fp16.safetensors && \
-    cp -f /comfyui/models/controlnet/wan21_u3c_controlnet_fp16.safetensors \
-          /comfyui/models/controlnet/Wan21_Uni3C_controlnet_fp16.safetensors
+    wget --tries=5 --retry-connrefused --waitretry=10 -c -q --show-progress "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_Uni3C_controlnet_fp16.safetensors" \
+    -O /comfyui/models/controlnet/Wan21_Uni3C_controlnet_fp16.safetensors
 
 # Upscaler model
 RUN mkdir -p /comfyui/models/upscale_models && \
