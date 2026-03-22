@@ -20,10 +20,12 @@ RUN pip install --no-cache-dir \
     psutil \
     sageattention
 
-# ── ComfyUI launch flags for A100 80GB ──
-# --highvram: keep models in VRAM instead of offloading to CPU (prevents 45% VRAM idle)
-# --use-sage-attention: use SageAttention for 1.5-2x faster attention computation
-ENV CLI_ARGS="--highvram --use-sage-attention"
+# ── Patch ComfyUI start script to add --highvram and --use-sage-attention ──
+# The RunPod worker launches: python -u /comfyui/main.py --disable-auto-launch ...
+# We patch start.sh to inject our flags into that command.
+RUN sed -i 's|/comfyui/main.py --disable-auto-launch|/comfyui/main.py --highvram --use-sage-attention --disable-auto-launch|g' /start.sh && \
+    echo "Patched /start.sh with --highvram --use-sage-attention" && \
+    grep -n "main.py" /start.sh
 
 # ── Download ALL models into the image ──
 
