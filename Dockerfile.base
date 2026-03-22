@@ -7,7 +7,11 @@ FROM runpod/worker-comfyui:5.7.1-base
 
 SHELL ["/bin/bash", "-c"]
 
-# ── Python dependencies ──
+# ── Install C compiler + Python headers FIRST (needed for SageAttention build) ──
+RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# ── Python dependencies (sageattention needs gcc + python3-dev above) ──
 RUN pip install --no-cache-dir \
     onnx \
     onnxruntime-gpu \
@@ -19,10 +23,6 @@ RUN pip install --no-cache-dir \
     scikit-image \
     psutil \
     sageattention
-
-# ── Install C compiler for Triton/SageAttention JIT compilation ──
-RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ python3-dev && \
-    rm -rf /var/lib/apt/lists/*
 
 # ── Patch ComfyUI start script to add --highvram and --use-sage-attention ──
 # Find and patch every occurrence of main.py launch in start.sh
