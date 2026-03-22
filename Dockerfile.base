@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir \
     sageattention
 
 # ── Install C compiler for Triton/SageAttention JIT compilation ──
-RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ && \
+RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ python3-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # ── Patch ComfyUI start script to add --highvram and --use-sage-attention ──
