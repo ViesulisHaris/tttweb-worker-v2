@@ -17,7 +17,13 @@ RUN pip install --no-cache-dir \
     imageio \
     imageio-ffmpeg \
     scikit-image \
-    psutil
+    psutil \
+    sageattention
+
+# ── ComfyUI launch flags for A100 80GB ──
+# --highvram: keep models in VRAM instead of offloading to CPU (prevents 45% VRAM idle)
+# --use-sage-attention: use SageAttention for 1.5-2x faster attention computation
+ENV CLI_ARGS="--highvram --use-sage-attention"
 
 # ── Download ALL models into the image ──
 
