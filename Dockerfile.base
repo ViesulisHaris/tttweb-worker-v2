@@ -170,4 +170,29 @@ for handler_path in files:
         print(f"Patched successfully: {handler_path}")
 PATCH_EOF
 
+# ── Keep RunPod output uploads on Migla's configured R2 bucket ──
+# runpod-python defaults upload_image() to an MM-YY bucket when callers do
+# not pass bucket_name. That silently drifts away from our bucket-scoped R2
+# token each month, so let BUCKET_NAME pin the output bucket at runtime.
+RUN python3 - <<'PATCH_EOF'
+import os
+import sys
+from pathlib import Path
+from runpod.serverless.utils import rp_upload
+
+path = Path(rp_upload.__file__)
+old = 'bucket = bucket_name if bucket_name else time.strftime("%m-%y")'
+new = 'bucket = bucket_name or os.environ.get("BUCKET_NAME") or time.strftime("%m-%y")'
+content = path.read_text()
+
+if new in content:
+    print(f"RunPod output bucket patch already present: {path}")
+elif old in content:
+    path.write_text(content.replace(old, new, 1))
+    print(f"Patched RunPod output bucket selection: {path}")
+else:
+    print(f"ERROR: RunPod output bucket pattern not found in {path}")
+    sys.exit(1)
+PATCH_EOF
+
 ENV PYTHONUNBUFFERED=1
