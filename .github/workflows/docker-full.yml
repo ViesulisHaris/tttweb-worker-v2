@@ -1,0 +1,34 @@
+name: Build and Push Full Worker Image
+
+on:
+  workflow_dispatch:
+
+env:
+  FULL_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/tttweb-worker-v2
+
+jobs:
+  build-full:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push full image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.FULL_IMAGE }}:latest
+            ${{ env.FULL_IMAGE }}:${{ github.sha }}
+          no-cache: true

@@ -16,11 +16,14 @@ RUN git clone --depth=1 https://github.com/kijai/ComfyUI-WanVideoWrapper && \
     git clone --depth=1 https://github.com/fq393/ComfyUI-ZMG-Nodes && \
     git clone --depth=1 https://github.com/kijai/ComfyUI-segment-anything-2 && \
     git clone --depth=1 https://github.com/hanjangma41/NEW-UTILSs && \
-    git clone --depth=1 https://github.com/plugcrypt/CRT-Nodes && \
     git clone --depth=1 https://github.com/evanspearman/ComfyMath && \
     git clone --depth=1 https://github.com/teskor-hub/comfyui-teskors-utils && \
     git clone --depth=1 https://github.com/jnxmx/ComfyUI_HuggingFace_Downloader && \
     git clone --depth=1 https://github.com/reasj2/comfyui-animator-nodes && \
+    sed -i '/from \.nodes\.preview_override_node import ModelPreviewOverrideKJ, GetPreviewOverrideFramesKJ/d' /comfyui/custom_nodes/ComfyUI-KJNodes/__init__.py && \
+    sed -i '/"ModelPreviewOverrideKJ": {"class": ModelPreviewOverrideKJ/d' /comfyui/custom_nodes/ComfyUI-KJNodes/__init__.py && \
+    sed -i '/"GetPreviewOverrideFramesKJ": {"class": GetPreviewOverrideFramesKJ/d' /comfyui/custom_nodes/ComfyUI-KJNodes/__init__.py && \
+    echo "Patched ComfyUI-KJNodes optional preview override import" && \
     for req in /comfyui/custom_nodes/*/requirements.txt; do \
         pip install --no-cache-dir -r "$req" 2>/dev/null || true; \
     done && \
